@@ -141,7 +141,7 @@ def score_board(counterX, counterO, counter_draw, gameCount):
     print("-----------------------------\n")
 
 
-def optimality_stats(cache, report=False):
+def optimality_stats(cache, maximum_iterations, report=False):
     length_of_cache = 0
     count_of_optimal_states = 0
     for key in cache:
@@ -198,23 +198,24 @@ def test_game(iterations):
         
 
 def connect(maximum_iterations):
-    counterX = 0
-    counterO = 0
-    counter_draw = 0
-    gameCount = 0
+    # counterX = 0
+    # counterO = 0
+    # counter_draw = 0
+    # gameCount = 0
     iterator = 0
     while(iterator < maximum_iterations):
-        winner = main_game()
-        gameCount += 1
+        # winner = main_game()
+        main_game()
+        # gameCount += 1
         iterator+=1
-        if winner == 'X':
-            counterX += 1
-        elif winner == 'O':
-            counterO += 1
-        elif winner == "Draw":
-            counter_draw+=1
-        if iterator%10000 == 0:
-            score_board(counterX, counterO, counter_draw, gameCount)
+        # if winner == 'X':
+        #     counterX += 1
+        # elif winner == 'O':
+        #     counterO += 1
+        # elif winner == "Draw":
+        #     counter_draw+=1
+        # if iterator%10000 == 0:
+        #     score_board(counterX, counterO, counter_draw, gameCount)
 
 
         # x = input("Press r to reset scores and n to quit the game:")
@@ -225,24 +226,25 @@ def connect(maximum_iterations):
         # if x == "n":
         #     break
 
+# !!!!! ATTENTION !!!!!!
+# Below block is required for debugging this file. 
+ 
+# a = time.time()
+# print("Started the loop ... ")
 
-a = time.time()
-print("Started the loop ... ")
+# maximum_iterations = 25000
 
-maximum_iterations = 50000
+# print("Before starting the game: {} and its length: {}".format(rl.cache, len(rl.cache)))
 
 # connect(maximum_iterations)
-print("Before starting the game: {} and its length: {}".format(rl.cache, len(rl.cache)))
 
-connect(maximum_iterations)
+# b = time.time()
 
-b = time.time()
+# optimality_stats(rl.cache, maximum_iterations, report = True)
 
-optimality_stats(rl.cache, report = True)
+# # boost_optimality(rl.cache, 10)
+# print("Time taken {} seconds".format(round(b-a, 2)))
 
-boost_optimality(rl.cache, 100)
-print("Time taken {} seconds".format(round(b-a, 2)))
-
-optimality_stats(rl.cache, report=True)
-print("Debug statement")
+# # optimality_stats(rl.cache, report=True)
+# # print("Debug statement")
 

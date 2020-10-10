@@ -1,19 +1,41 @@
 import ttt_tools as ttt
 import random
-
+import random_game_generator as rgg
+import rl_brain as rl
 
 initial_state = "123456789"
 
-def bot_engine(state):
 
+def find_next_symbol(state):
+    """
+    Receives the state as input and returns the next symbol that must be
+    applied on the state
+
+    """
+
+    if state.count("f") == state.count("s"):
+        return "f"
+    return "s"
+
+
+def random_bot(state):
+    # print("Computer's turn ......")
     empty_slots = ttt.find_empty_slots(state)
     random_index = random.choice(empty_slots)
-    print("Computer's turn ......")
     return random_index
 
+def bot_engine(state):
+
+    # print("Computer's turn ........")
+
+    symbol = find_next_symbol(state)
+
+    return rl.cache[state].optimal_policy[symbol]
+
+
 def human_player(state):
-    user_input_index = int(input("Input : "))
     print("Human's turn ........")
+    user_input_index = int(input("Input : "))
     return user_input_index
 
 
@@ -59,30 +81,35 @@ def main_game():
     second_symbol = temp_dict["second"]["symbol"]
 
     current_state = initial_state
-    for i in range(9):
+    for i in range(1, 10):
 
-        current_player, current_symbol = (first_player, first_symbol) if i%2 == 0 else (second_player, second_symbol)
-        new_index = current_player(current_state)
+        current_player, current_symbol = (first_player, first_symbol) if i%2 == 1 else (second_player, second_symbol)
+        
+        translated_current_state = current_state.replace(first_symbol, "f").replace(second_symbol, "s")
+        
+        new_index = current_player(translated_current_state)
         current_state = ttt.input_to_board(new_index, current_state, current_symbol)
+
         ttt.display_board(current_state)
         result = ttt.check_board(current_state, current_symbol)
 
         if result == "Draw":
             print("Game is a draw !!!")
-            return
+            return "Draw"
         elif result:
-            print("{} has won the game".format(current_symbol))
+            if current_symbol == "X":
+                print("Computer has won the game")
+            elif current_symbol == "O":
+                print("You have won the game")
             return current_symbol
 
 
 
-counterX = 0
-counterO = 0
-gameCount = 0
 
 
 
-def score_board():
+
+def score_board(counterX, counterO, counter_draw, gameCount):
     print("\n---------- Stats -----------")
     print("Total number of games played : {}".format(gameCount))
     print("Number of games computer won : {}".format(counterX))
@@ -91,6 +118,20 @@ def score_board():
     print("Your winning percentage : {}".format(round((counterO/gameCount)*100)))
     print("-----------------------------\n")
 
+
+
+print("Please wait, the computer is getting ready....")
+rgg.connect(30000)
+print("Done .... ")
+
+counterX = 0
+counterO = 0
+counter_draw = 0
+gameCount = 0
+
+iterations = 10000
+temp = 1
+
 while(True):
     winner = main_game()
     gameCount+=1
@@ -98,11 +139,20 @@ while(True):
         counterX+=1
     elif winner == 'O':
         counterO+=1
-    score_board()
+    elif winner == "Draw":
+        counter_draw+=1
+
+    score_board(counterX, counterO, counter_draw, gameCount)
     x = input("Press r to reset scores and n to quit the game:")
     if x == 'r':
         counterX = 0
         counterO = 0
+        counter_draw = 0
         gameCount = 0
     if x == "n":
         break
+
+
+
+
+# score_board(counterX, counterO, counter_draw, gameCount)

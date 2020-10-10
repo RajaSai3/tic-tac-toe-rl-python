@@ -72,9 +72,10 @@ def maximum_action_value(state, symbol):
         if not action_state in cache:
             cache[action_state] = mdp.MDP(action_state) 
         
-        cache[action_state].optimal_policy["f"] = cache[state].actions[0]
-        cache[action_state].optimal_policy["s"] = cache[state].actions[0]
-        cache[action_state].is_state_optimal = True
+        if cache[action_state].is_state_optimal:
+            cache[state].optimal_policy["f"] = cache[state].actions[0]
+            cache[state].optimal_policy["s"] = cache[state].actions[0]
+            cache[state].is_state_optimal = True
         return cache[action_state].value
 
     elif len(cache[state].actions) > 1:
@@ -90,30 +91,25 @@ def maximum_action_value(state, symbol):
             if not action_state in cache:
                 cache[action_state] = mdp.MDP(action_state)
 
-            if cache[action_state].is_state_optimal:
-                f_action_value_dict[action] = cache[action_state].value["f"]
-                s_action_value_dict[action] = cache[action_state].value["s"]
-               #change below block 
-            elif not cache[action_state].is_state_optimal and cache[action_state].value != {"f":0, "s":0}:
-                f_action_value_dict[action] = cache[action_state].value["f"]
-                s_action_value_dict[action] = cache[action_state].value["s"]
+            f_action_value_dict[action] = cache[action_state].value["f"]
+            s_action_value_dict[action] = cache[action_state].value["s"]
+ 
             
 
 
             optimal_list.append(cache[action_state].is_state_optimal)
 
-        if list_bool_check(optimal_list, False):
-            return {"f":0, "s":0}
+
+        if list_bool_check(optimal_list):
+            cache[state].is_state_optimal = True
 
             
         final_f = return_maximum_value_and_policy(f_action_value_dict)
         final_s = return_maximum_value_and_policy(s_action_value_dict)
 
-        cache[action_state].optimal_policy["f"] = final_f["action"]
-        cache[action_state].optimal_policy["s"] = final_s["action"]
+        cache[state].optimal_policy["f"] = final_f["action"]
+        cache[state].optimal_policy["s"] = final_s["action"]
 
-        if list_bool_check(optimal_list):
-            cache[state].is_state_optimal = True
 
 
 
