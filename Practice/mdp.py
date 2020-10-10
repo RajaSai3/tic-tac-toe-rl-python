@@ -1,5 +1,7 @@
 import ttt_tools as ttt
 
+rewards = {"win": 10, "loss": -10, "draw": 5, "move": -1}
+
 class MDP():
     def __init__(self, state):
         self.state = state
@@ -16,14 +18,14 @@ class MDP():
         if game_status:
             
             if game_result == "f":
-                self.value["f"] = 10
-                self.value["s"] = -10
+                self.value["f"] = rewards["win"]
+                self.value["s"] = rewards["loss"]
             elif game_result == "s":
-                self.value["s"] = 10
-                self.value["f"] = -10
+                self.value["s"] = rewards["win"]
+                self.value["f"] = rewards["loss"]
             elif game_result == "Draw":
-                self.value["f"] = 5
-                self.value["s"] = 5
+                self.value["f"] = rewards["draw"]
+                self.value["s"] = rewards["draw"]
             
             self.is_state_optimal = True
             self.optimal_policy["f"] = -1

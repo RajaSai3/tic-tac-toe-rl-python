@@ -35,6 +35,9 @@ def display_board(board_state):
 def input_to_board(input_index, board_state, player_symbol):
 
     """
+
+    input_to_board(input_index, board_state, player_symbol)
+
     It returns the a new board state based on the given input index, input board state and player symbol
 
     Input : input_index where user wants to enter his symbol in the board,
@@ -72,19 +75,25 @@ def check_board(board_state, player_symbol):
 
     if {1, 2, 3}.issubset(indices_set) or {4, 5, 6}.issubset(indices_set) or {7, 8, 9}.issubset(indices_set):
 
-        print("Row completed..!!!")
+        # print("Row completed..!!!")
+        
         # print("Player "+player_symbol+" won the game.")
+
         return True
     
     if {1, 4, 7}.issubset(indices_set) or {2, 5, 8}.issubset(indices_set) or {3, 6, 9}.issubset(indices_set):
 
-        print("Column completed..!!!")
+        # print("Column completed..!!!")
+
         # print("Player "+player_symbol+" won the game.")
+        
         return True
     if {1, 5, 9}.issubset(indices_set) or {3, 5, 7}.issubset(indices_set):
 
-        print("Diagonal completed..!!!")
+        # print("Diagonal completed..!!!")
+
         # print("Player "+player_symbol+" won the game.")
+
         return True
 
     if is_board_completely_filled:
@@ -98,6 +107,8 @@ def check_board(board_state, player_symbol):
 
 def find_empty_slots(board_state):
     """
+    find_empty_slots(board_state)
+
     It is function that accepts the board state string as input and returns the list of indices from 1 to 9 (not from 0-8).
     These empty slots are places in the board where a user/agent attempt an action.
 

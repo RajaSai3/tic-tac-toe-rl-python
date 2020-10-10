@@ -16,18 +16,52 @@ def human_player(state):
     print("Human's turn ........")
     return user_input_index
 
+
+def select_first_player_randomly(players_dict):
+    """
+    Selects who would play the first move of the game randomly from both the players
+
+    The function expects to receive a dictionary with only two key-value pairs as there cannot be more than two players in tic-tac-toe 
+
+    input : A dictionary with symbols as keys and its corresponding players (function references) as values
+
+    output :  A dictionary with randomly generated first and second players with their symbols
+
+    """
+    if len(players_dict) != 2:
+        raise Exception("Game should have only two players !")
+
+    keys = list(players_dict.keys())
+
+    first_symbol = random.choice(keys)
+
+    first_player = players_dict[first_symbol]
+    keys.remove(first_symbol)
+
+    second_symbol = keys[0]
+
+    second_player = players_dict[second_symbol]
+
+    result_dict = {"first": {"symbol": first_symbol, "player": first_player}, "second": {
+        "symbol": second_symbol, "player": second_player}}
+    return result_dict
+
+
+
 def main_game():
-    # x = random.choice([0, 1])
-    # bot_engine() if x==0 else human_player()
+    temp_dict = select_first_player_randomly(
+        {"X": bot_engine, "O": human_player})
 
-    first_choice, first_symbol = random.choice([(bot_engine, "X"), (human_player, "O")])
+    first_player = temp_dict["first"]["player"]
+    first_symbol = temp_dict["first"]["symbol"]
 
-    second_choice, second_symbol = (human_player, "O") if first_choice == bot_engine else (bot_engine, "X")
+    second_player = temp_dict["second"]["player"]
+    second_symbol = temp_dict["second"]["symbol"]
 
     current_state = initial_state
     for i in range(9):
 
-        current_player, current_symbol = (first_choice, first_symbol) if i%2 == 0 else (second_choice, second_symbol)
+        current_player, current_symbol = (first_player, first_symbol) if i%2 == 0 else (second_player, second_symbol)
         new_index = current_player(current_state)
         current_state = ttt.input_to_board(new_index, current_state, current_symbol)
         ttt.display_board(current_state)
