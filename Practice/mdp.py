@@ -1,6 +1,6 @@
 import ttt_tools as ttt
 
-rewards = {"win": 10, "loss": 0, "draw": 5, "move": -1}
+rewards = {"win": 10, "loss": -10, "draw": 5, "move": -1}
 
 class MDP():
     def __init__(self, state):

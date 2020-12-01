@@ -8,6 +8,8 @@ cache = {}
 
 optimal_dict = {}
 
+learning_rate = 0.85
+discount_factor = 0.99
 
 def list_bool_check(input_list, all_bool = True):
 
@@ -30,16 +32,21 @@ def return_maximum_value_and_policy(input_dict):
     """
     Receives a dictionary having actions as keys and its action-values as values
 
-    returns the pair of key, value whose value is the maximum
+    returns the dictionary having a pair of key, value whose value is the maximum values and corresponding action
 
     """
 
-    maximum_value = max(input_dict.values())
+    values = input_dict.values()
+
+    maximum_value = max(values)
 
     keys_list = []
 
     for key, value in input_dict.items():
 
+        # if value == 0:
+        #     maximum_action = key
+        #     return {"action": maximum_action, "value": maximum_value}
         if value == maximum_value:
             keys_list.append(key)
 
@@ -51,6 +58,24 @@ def return_maximum_value_and_policy(input_dict):
 
     return {"action": maximum_action, "value": maximum_value}
 
+# def updated_return_maximum_value_and_policy(f_input_dict, s_input_dict, symbol):
+
+#     other_symbol = "s" if symbol == "f" else "f"
+
+    
+
+
+#     maximum_values = {"f": max(f_input_dict.values()), "s":max(s_input_dict.values())}
+
+#     for key, value in f_input_dict.keys():
+
+#         if value[other_symbol] == mdp.rewards["win"]:
+
+#             final_actions[key][symbol] = key
+
+#         if maximum_values[]
+        
+            
 
 
 
@@ -61,7 +86,7 @@ def maximum_action_value(state, symbol):
     maximum_action_value(state, symbol)
 
     Given an input state and a symbol, the function returns the maximum action-value for the state
-    by itertating through the state's actions 
+    by iterating through the state's actions 
 
 
     """
@@ -139,7 +164,7 @@ def update_values(state, symbol):
         if not cache[state].is_state_optimal:
 
             values_dict = maximum_action_value(state, symbol)
-            cache[state].value[symbol] = mdp.rewards["move"] + values_dict[symbol]
+            cache[state].value[symbol] += learning_rate*(mdp.rewards["move"] + discount_factor * values_dict[symbol] - cache[state].value[symbol])
             cache[state].value[other_symbol] = values_dict[other_symbol]
         # if cache[state].is_state_optimal:
         #     print(state+" state is optimal")

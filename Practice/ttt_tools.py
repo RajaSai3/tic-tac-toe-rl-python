@@ -41,8 +41,8 @@ def input_to_board(input_index, board_state, player_symbol):
     It returns the a new board state based on the given input index, input board state and player symbol
 
     Input : input_index where user wants to enter his symbol in the board,
-            board_state is the input state of teh board,
-            player_symbol is the symbol player wnats to enter in the board (like X/O). 
+            board_state is the input state of the board,
+            player_symbol is the symbol player wants to enter in the board (like X/O). 
 
     Output : returns a new state with the input index
 

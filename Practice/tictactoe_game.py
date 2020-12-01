@@ -92,7 +92,7 @@ def main_game():
 
         ttt.display_board(current_state)
         result = ttt.check_board(current_state, current_symbol)
-
+        # print("Debug")
         if result == "Draw":
             print("Game is a draw !!!")
             return "Draw"

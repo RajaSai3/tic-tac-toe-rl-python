@@ -15,13 +15,12 @@ def find_next_symbol(state):
 
     """
 
-
     if state.count("f") == state.count("s"):
         return "f"
     return "s"
 
-def translate_state(state, symbol_dict):
 
+def translate_state(state, symbol_dict):
     """
     Given and input state with 'X' and 'O' and a symbol mapthe function
     returns a state with 'f' and 's'
@@ -39,11 +38,13 @@ def human_player(state):
     print("Human's turn ........")
     return user_input_index
 
+
 def random_bot(state):
     # print("Computer's turn ......")
     empty_slots = ttt.find_empty_slots(state)
     random_index = random.choice(empty_slots)
     return random_index
+
 
 def bot_engine(state):
 
@@ -53,8 +54,8 @@ def bot_engine(state):
 
     return rl.cache[state].optimal_policy[symbol]
 
-def select_first_player_randomly(players_dict):
 
+def select_first_player_randomly(players_dict):
     """
     Selects who would play the first move of the game randomly from both the players
 
@@ -79,14 +80,14 @@ def select_first_player_randomly(players_dict):
 
     second_player = players_dict[second_symbol]
 
-    result_dict = {"first": {"symbol":first_symbol, "player":first_player}, "second": {"symbol":second_symbol, "player":second_player}}
+    result_dict = {"first": {"symbol": first_symbol, "player": first_player}, "second": {
+        "symbol": second_symbol, "player": second_player}}
     return result_dict
 
 
-
-
-def main_game(player1, player2):
-    temp_dict = select_first_player_randomly({"X": player1, "O": player2})
+def main_game():
+    temp_dict = select_first_player_randomly(
+        {"X": bot_engine, "O": random_bot})
 
     first_player = temp_dict["first"]["player"]
     first_symbol = temp_dict["first"]["symbol"]
@@ -98,26 +99,27 @@ def main_game(player1, player2):
     current_state = initial_state
     for i in range(1, 10):
 
-        current_player, current_symbol = (first_player, first_symbol) if i % 2 == 1 else (second_player, second_symbol)
+        current_player, current_symbol = (
+            first_player, first_symbol) if i % 2 == 1 else (second_player, second_symbol)
 
         translated_current_state = translate_state(current_state, symbol_map)
         if not translated_current_state in rl.cache:
-            # if current_state == "123fssffs":yy
-            rl.cache[translated_current_state] = mdp.MDP(translated_current_state)
+            # if current_state == "123fssffs":
+            #     print("Let's debug")
+            rl.cache[translated_current_state] = mdp.MDP(
+                translated_current_state)
         rl.update_values(translated_current_state, symbol_map[current_symbol])
 
-        new_index = current_player(translated_current_state)
-        current_state = ttt.input_to_board( new_index, current_state, current_symbol)
+        new_index = current_player(current_state)
+        current_state = ttt.input_to_board(
+            new_index, current_state, current_symbol)
         # ttt.display_board(current_state)
         result = ttt.check_board(current_state, current_symbol)
-
-
-
 
         if result == "Draw":
 
             # print("Game is a draw !!!")
-            
+
             return "Draw"
         elif result:
 
@@ -126,13 +128,11 @@ def main_game(player1, player2):
             return current_symbol
 
 
-
-
 def score_board(counterX, counterO, counter_draw, gameCount):
     print("\n---------- Stats -----------")
     print("Total number of games played : {}".format(gameCount))
-    print("Number of games 'X' has won : {}".format(counterX))
-    print("Number of games 'O' has won : {}".format(counterO))
+    print("Number of games computer won : {}".format(counterX))
+    print("Number of games you have won : {}".format(counterO))
     print("Number of games that have been drawn : {}".format(counter_draw))
     print("Winning percentage of Computer : {} %".format(
         round((counterX/gameCount)*100, 2)))
@@ -164,12 +164,15 @@ def optimality_stats(cache, maximum_iterations, report=False):
 
     return percentage
 
+
 def boost_optimality(cache, iterations):
 
     while iterations > 0:
+        # keys =list(cache.keys()).copy()
+        # keys.reverse()
         for key in cache.keys():
             rl.update_values(key, find_next_symbol(key))
-        iterations-=1
+        iterations -= 1
     print("Finished optimization")
 
 
@@ -180,65 +183,41 @@ def connect(maximum_iterations):
     gameCount = 0
     iterator = 0
     while(iterator < maximum_iterations):
-        winner = main_game(random_bot, random_bot)
+        winner = main_game()
         # main_game()
         gameCount += 1
-        iterator+=1
+        iterator += 1
         if winner == 'X':
             counterX += 1
         elif winner == 'O':
             counterO += 1
         elif winner == "Draw":
-            counter_draw+=1
-        if iterator%10000 == 0:
+            counter_draw += 1
+        if iterator % 10000 == 0:
             score_board(counterX, counterO, counter_draw, gameCount)
 
 
 # !!!!! ATTENTION !!!!!!
-# Below block is required for debugging this file. 
+# Below block is required for debugging this file.
 
 if __name__ == "__main__":
-    
 
     a = time.time()
     print("Started the loop ... ")
 
-    maximum_iterations = 200000
+    maximum_iterations = 25000
 
-    print("Before starting the game: {} and its length: {}".format(rl.cache, len(rl.cache)))
+    print("Before starting the game: {} and its length: {}".format(
+        rl.cache, len(rl.cache)))
 
     connect(maximum_iterations)
 
     b = time.time()
 
-    optimality_stats(rl.cache, maximum_iterations, report = True)
+    optimality_stats(rl.cache, maximum_iterations, report=True)
 
     # # boost_optimality(rl.cache, 10)
     # print("Time taken {} seconds".format(round(b-a, 2)))
 
     # # optimality_stats(rl.cache, report=True)
     # # print("Debug statement")
-
-    iter = 1000
-    temp = 1
-    X = 0
-    O = 0
-    draw = 0
-    games = 0
-    while temp <= iter:
-        res = main_game(bot_engine, random_bot)
-
-        games+=1
-        if res == "Draw":
-            draw+=1
-        elif res == 'X':
-            X+=1
-        elif res == 'O':
-            O+=1
-        temp+=1
-
-        
-    score_board(X, O, draw, games)
-
-        
-
