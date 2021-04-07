@@ -1,15 +1,20 @@
 def display_board(board_state):
+    """
+        Displays
+
+    """
+
     if type(board_state) != str:
         raise TypeError('Given board input must be String')
 
     if len(board_state) != 9:
         raise Exception("Input board string length is not 9")
-    
+
     counter = 0
     print()
     for position in board_state:
-        counter+=1
-        if counter%3 == 0:
+        counter += 1
+        if counter % 3 == 0:
             # paddingString = "\n---------\n" if counter!= 9 else ''
             if counter != 9:
                 paddingString = "\n---------\n"
@@ -17,7 +22,6 @@ def display_board(board_state):
                 paddingString = ''
         else:
             paddingString = " | "
-
 
         if position.isnumeric():
             print(" ", end=paddingString)
@@ -31,9 +35,7 @@ def display_board(board_state):
 # display_board('OXOXOOOOX')
 
 
-
 def input_to_board(input_index, board_state, player_symbol):
-
     """
 
     input_to_board(input_index, board_state, player_symbol)
@@ -42,7 +44,7 @@ def input_to_board(input_index, board_state, player_symbol):
 
     Input : input_index where user wants to enter his symbol in the board,
             board_state is the input state of the board,
-            player_symbol is the symbol player wants to enter in the board (like X/O). 
+            player_symbol is the symbol player wants to enter in the board (like X/O).
 
     Output : returns a new state with the input index
 
@@ -54,11 +56,11 @@ def input_to_board(input_index, board_state, player_symbol):
 
             if ind == input_index - 1:
                 if val.isnumeric():
-                    output_state+=player_symbol
+                    output_state += player_symbol
                 else:
                     raise Exception("Cannot change already assigned board values")
             else:
-                output_state+=val
+                output_state += val
 
     return output_state
 
@@ -66,48 +68,64 @@ def input_to_board(input_index, board_state, player_symbol):
 # print(input_to_board(4, "123O5678X", "O"))
 
 
-def check_board(board_state, player_symbol):
-    
+def check_board(board_state, player_symbol, display_message = False):
+    """
+
+    check_board function receives board state and player symbol to be checked and returns whether the status of the 
+    game with respect to the player 
+
+    INPUT:
+
+    board_state: It refers the state string
+    player_symbol: It refers the player's symbol by which the board has to be verified
+    display_message: an optional parameter, when enabled prints additional result
+
+    OUTPUT:
+        returns True or False based on the end result of the game
+
+
+    """
+
     is_board_completely_filled = board_state.isalpha()
 
     indices_set = set([ind+1 for ind, val in enumerate(board_state) if val == player_symbol])
 
-
     if {1, 2, 3}.issubset(indices_set) or {4, 5, 6}.issubset(indices_set) or {7, 8, 9}.issubset(indices_set):
 
-        # print("Row completed..!!!")
-        
-        # print("Player "+player_symbol+" won the game.")
+        if display_message:
+            print("Row completed..!!!")
+            print("Player "+player_symbol+" won the game.")
 
         return True
-    
+
     if {1, 4, 7}.issubset(indices_set) or {2, 5, 8}.issubset(indices_set) or {3, 6, 9}.issubset(indices_set):
 
-        # print("Column completed..!!!")
+        if display_message:
+            print("Column completed..!!!")
+            print("Player "+player_symbol+" won the game.")
 
-        # print("Player "+player_symbol+" won the game.")
-        
         return True
     if {1, 5, 9}.issubset(indices_set) or {3, 5, 7}.issubset(indices_set):
 
-        # print("Diagonal completed..!!!")
-
-        # print("Player "+player_symbol+" won the game.")
+        if display_message:
+            print("Diagonal completed..!!!")
+            print("Player "+player_symbol+" won the game.")
 
         return True
 
     if is_board_completely_filled:
+
+        if display_message:
+            print("Game is drawn...!")
+
         return "Draw"
 
     return False
 
 
-
-
-
-def find_empty_slots(board_state):
+def find_possible_actions(board_state):
     """
-    find_empty_slots(board_state)
+    find_possible_actions(board_state)
 
     It is function that accepts the board state string as input and returns the list of indices from 1 to 9 (not from 0-8).
     These empty slots are places in the board where a user/agent attempt an action.
@@ -117,7 +135,8 @@ def find_empty_slots(board_state):
     Output : Returns a list of indices where where one can make a new move.
 
     """
-    empty_slot_indices = [ind+1 for ind, val in enumerate(board_state) if val.isnumeric()]
+    empty_slot_indices = [ind+1 for ind,
+        val in enumerate(board_state) if val.isnumeric()]
 
     return empty_slot_indices
 
@@ -128,33 +147,37 @@ def find_empty_slots(board_state):
 # print(find_empty_slots(board))
 
 
-def check_board_all(board_state, symbols):
+def check_board_all(board_state, symbols, display_message = False):
 
     is_board_completely_filled = board_state.isalpha()
 
     for player_symbol in symbols:
 
-
-        indices_set = set([ind+1 for ind, val in enumerate(board_state) if val == player_symbol])
+        indices_set = set(
+            [ind+1 for ind, val in enumerate(board_state) if val == player_symbol])
 
         if {1, 2, 3}.issubset(indices_set) or {4, 5, 6}.issubset(indices_set) or {7, 8, 9}.issubset(indices_set):
-
-            # print("Row completed..!!!")
-            # print("Player "+player_symbol+" won the game.")
+            if display_message:
+                print("Row completed..!!!")
+                print("Player "+player_symbol+" won the game.")
             return (True, player_symbol)
 
         if {1, 4, 7}.issubset(indices_set) or {2, 5, 8}.issubset(indices_set) or {3, 6, 9}.issubset(indices_set):
 
-            # print("Column completed..!!!")
-            # print("Player "+player_symbol+" won the game.")
+            if display_message:
+                print("Column completed..!!!")
+                print("Player "+player_symbol+" won the game.")
             return (True, player_symbol)
         if {1, 5, 9}.issubset(indices_set) or {3, 5, 7}.issubset(indices_set):
 
-            # print("Diagonal completed..!!!")
-            # print("Player "+player_symbol+" won the game.")
+            if display_message:
+                print("Diagonal completed..!!!")
+                print("Player "+player_symbol+" won the game.")
             return (True, player_symbol)
 
         if is_board_completely_filled:
+            if display_message:
+                print("The game has been drawn !!!")
             return (True, "Draw")
 
     return (False, "Game not over")
