@@ -1,6 +1,6 @@
 def display_board(board_state):
     """
-        Displays
+        Displays the given state string in a 3 X 3 tic tac toe board
 
     """
 
@@ -11,11 +11,11 @@ def display_board(board_state):
         raise Exception("Input board string length is not 9")
 
     counter = 0
-    print()
+    # print()
     for position in board_state:
         counter += 1
         if counter % 3 == 0:
-            # paddingString = "\n---------\n" if counter!= 9 else ''
+            
             if counter != 9:
                 paddingString = "\n---------\n"
             else:
@@ -32,7 +32,7 @@ def display_board(board_state):
     print("\n\n")
 
 
-# display_board('OXOXOOOOX')
+
 
 
 def input_to_board(input_index, board_state, player_symbol):
@@ -65,7 +65,7 @@ def input_to_board(input_index, board_state, player_symbol):
     return output_state
 
 
-# print(input_to_board(4, "123O5678X", "O"))
+
 
 
 def check_board(board_state, player_symbol, display_message = False):
@@ -141,11 +141,6 @@ def find_possible_actions(board_state):
     return empty_slot_indices
 
 
-# board = "X2XXO6OOX"
-# display_board(board)
-# print(check_board(board_state=board, player_symbol="O"))
-# print(find_empty_slots(board))
-
 
 def check_board_all(board_state, symbols, display_message = False):
 
@@ -181,3 +176,12 @@ def check_board_all(board_state, symbols, display_message = False):
             return (True, "Draw")
 
     return (False, "Game not over")
+
+
+def action_diff(state1, state2, player_symbol):
+    for i in range(9):
+        if (state1[i] != state2[i]) and ((state1[i] == player_symbol) or (state2[i] == player_symbol)):
+            if state1[i].isnumeric():
+                return int(state1[i])
+            else:
+                return int(state2[i])

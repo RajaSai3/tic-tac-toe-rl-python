@@ -1,7 +1,6 @@
-New Folder
+__pycache__
 .vscode
-/*.json
-Practice/Original
-Practice/__pycache__
-Practice/.vscode
-Addition to Final
+Analysis
+*.txt
+*.pyc
+fun.py
